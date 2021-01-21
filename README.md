@@ -8,3 +8,7 @@ Simple website that allows to insert a post and comment on posts.
 2. comment
     * create - under a post
     * list all - but associated with a post
+
+## Tools
+FE - React App
+BE - Express servers (2)
