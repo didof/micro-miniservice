@@ -1,0 +1,16 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "broker": "cd broker && npm run start",
+    "comments": "cd comments && npm run start",
+    "post": "cd post && npm run start",
+    "query": "cd query && npm run start",
+    "client": "cd ../client && npm start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

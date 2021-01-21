@@ -2,7 +2,8 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const { randomBytes } = require('crypto')
 const cors = require('cors')
-
+const axios = require('axios')
+const brokerUrl = 'http://localhost:4005/events'
 
 const app = express()
 
@@ -16,7 +17,7 @@ app.get('/posts/:id/comments', (req, res) => {
     res.send(commentsById[req.params.id] || [])
 })
 
-app.post('/posts/:id/comments', (req, res) => {
+app.post('/posts/:id/comments', async (req, res) => {
     const commentId = randomBytes(4).toString('hex')
     const { content } = req.body
 
@@ -26,8 +27,22 @@ app.post('/posts/:id/comments', (req, res) => {
 
     commentsById[req.params.id] = comments
 
+    // await axios.post(brokerUrl, {
+    //     type: 'CommentCreated',
+    //     data: {
+    //         id: commentId,
+    //         content
+    //     }
+    // })
+
     res.status(201)
     res.send(comments)
+})
+
+app.post('/events', (req, res) => {
+    console.log('received event: ', req.body.type)
+    res.status(200)
+    res.send({ ok: true })
 })
 
 const PORT = 4001
