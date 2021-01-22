@@ -14,33 +14,37 @@ app.get('/posts', (req, res) => {
     res.send(posts)
 })
 
-app.post('/events', (req, res) => {
-    const { type, data } = req.body
-
+function processEvent(type) {
     switch (type) {
         case 'PostCreated':
-            posts[data.id] = {
-                id: data.id,
-                title: data.title,
-                comments: []
+            return function (data) {
+                const { id, title } = data
+                posts[id] = { id, title, comments: [] }
             }
-
-            break;
         case 'CommentCreated':
-            post[data.postId].comments.push({
-                id: data.id,
-                content: data.content
-            })
-
-            break;
+            return function (data) {
+                const { postId, id, content } = data
+                posts[postId].comments.push({ id, content })
+            }
+        default:
+            console.error(`The event type ${type} is not recognized`)
     }
+}
 
-    console.log('process event:', req.body.type)
+app.post('/events', (req, res) => {
+    const { type, data } = req.body
+    console.log(`Processing event of type ${type}`)
+
+    processEvent(type)(data)
+
+
+    console.log(`current posts: ${JSON.stringify(posts[data.postId])}`)
+
     res.status(201)
     res.send({ ok: true })
 })
 
 const PORT = 4002
 app.listen(PORT, () => {
-    console.log(`Listening on ${PORT}`)
+    console.log(`[query] Listening on ${PORT}`)
 })

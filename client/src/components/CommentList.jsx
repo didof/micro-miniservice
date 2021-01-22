@@ -1,23 +1,7 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 
-const url = 'http://localhost:4001/posts/%ID%/comments'
-
-function CommentList({ postId }) {
-    const [comments, setComments] = useState([])
-
-    async function fetchPosts() {
-        const specificUrl = url.replace('%ID%', postId)
-
-        const response = await axios.get(specificUrl)
-
-        setComments(response.data)
-    }
-
-    useEffect(() => {
-        fetchPosts()
-    }, [])
-
+function CommentList({ comments }) {
+    
     function renderComments() {
         return comments.map(function({ id, content }) {
             return (

@@ -27,13 +27,14 @@ app.post('/posts/:id/comments', async (req, res) => {
 
     commentsById[req.params.id] = comments
 
-    // await axios.post(brokerUrl, {
-    //     type: 'CommentCreated',
-    //     data: {
-    //         id: commentId,
-    //         content
-    //     }
-    // })
+    await axios.post(brokerUrl, {
+        type: 'CommentCreated',
+        data: {
+            postId: req.params.id,
+            id: commentId,
+            content
+        }
+    })
 
     res.status(201)
     res.send(comments)
@@ -47,5 +48,5 @@ app.post('/events', (req, res) => {
 
 const PORT = 4001
 app.listen(PORT, () => {
-    console.log(`Listening on ${PORT}`)
+    console.log(`[comments] Listening on ${PORT}`)
 })

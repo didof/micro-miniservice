@@ -4,7 +4,7 @@ import axios from 'axios'
 import CommentCreate from './CommentCreate'
 import CommentList from './CommentList'
 
-const url = 'http://localhost:4000/posts'
+const url = 'http://localhost:4002/posts'
 
 function PostList() {
     const [posts, setPosts] = useState({})
@@ -20,7 +20,7 @@ function PostList() {
     }, [])
 
     function renderPosts() {
-        return Object.values(posts).map(function ({ id, title }, index) {
+        return Object.values(posts).map(function ({ id, title, comments }, index) {
             return (
                 <div
                     className="card"
@@ -29,7 +29,7 @@ function PostList() {
                 >
                     <div className="card-body">
                         <h3>{title}</h3>
-                        <CommentList postId={id} />
+                        <CommentList comments={comments} />
                         <CommentCreate postId={id} />
                     </div>
                 </div>
