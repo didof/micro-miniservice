@@ -1,50 +1,47 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const cors = require('cors')
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
 
-const app = express()
+const app = express();
+app.use(bodyParser.json());
+app.use(cors());
 
-const posts = {}
-
-app.use(bodyParser.json())
-app.use(cors())
+const posts = {};
 
 app.get('/posts', (req, res) => {
-    res.status(200)
-    res.send(posts)
-})
-
-function processEvent(type) {
-    switch (type) {
-        case 'PostCreated':
-            return function (data) {
-                const { id, title } = data
-                posts[id] = { id, title, comments: [] }
-            }
-        case 'CommentCreated':
-            return function (data) {
-                const { postId, id, content } = data
-                posts[postId].comments.push({ id, content })
-            }
-        default:
-            console.error(`The event type ${type} is not recognized`)
-    }
-}
+  res.send(posts);
+});
 
 app.post('/events', (req, res) => {
-    const { type, data } = req.body
-    console.log(`Processing event of type ${type}`)
+  const { type, data } = req.body;
 
-    processEvent(type)(data)
+  if (type === 'PostCreated') {
+    const { id, title } = data;
 
+    posts[id] = { id, title, comments: [] };
+  }
 
-    console.log(`current posts: ${JSON.stringify(posts[data.postId])}`)
+  if (type === 'CommentCreated') {
+    const { id, content, postId, status } = data;
 
-    res.status(201)
-    res.send({ ok: true })
-})
+    const post = posts[postId];
+    post.comments.push({ id, content, status });
+  }
 
-const PORT = 4002
-app.listen(PORT, () => {
-    console.log(`[query] Listening on ${PORT}`)
-})
+  if (type === 'CommentUpdated') {
+    const { postId, id, content, status } = data
+    const post = posts[postId]
+    const comment = post.comments.find(comment => {
+      return comment.id === id
+    })
+    comment.status = status
+  }
+
+  console.log(posts);
+
+  res.send({});
+});
+
+app.listen(4002, () => {
+  console.log('Listening on 4002');
+});
