@@ -19,7 +19,7 @@ app.post('/events', async (req, res) => {
         status,
         content: data.content
       }
-    });
+    }).catch(error => console.error(error));
   }
 
   res.send({});

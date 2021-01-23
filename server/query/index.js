@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const axios = require('axios')
 
 const app = express();
 app.use(bodyParser.json());
@@ -8,12 +9,8 @@ app.use(cors());
 
 const posts = {};
 
-app.get('/posts', (req, res) => {
-  res.send(posts);
-});
-
-app.post('/events', (req, res) => {
-  const { type, data } = req.body;
+const handleEvent = ({ type, data }) => {
+  console.log('Processing event: ', type)
 
   if (type === 'PostCreated') {
     const { id, title } = data;
@@ -36,12 +33,27 @@ app.post('/events', (req, res) => {
     })
     comment.status = status
   }
+}
 
-  console.log(posts);
-
-  res.send({});
+app.get('/posts', (req, res) => {
+  res.send(posts);
 });
 
-app.listen(4002, () => {
+app.post('/events', (req, res) => {
+
+  handleEvent(req.body)
+
+  res.send({ ok: true });
+});
+
+app.listen(4002, async () => {
   console.log('Listening on 4002');
+
+  try {
+    console.log('[query] sync with event-bus.')
+    const res = await axios.get('http://localhost:4005/events')
+    res.data.forEach(event => handleEvent(event))
+  } catch (error) {
+    console.error('[query] Impossible retrieve events history.')
+  }
 });
