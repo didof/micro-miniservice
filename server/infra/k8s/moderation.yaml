@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: moderation
+spec:
+  containers:
+    - name: comments
+      image: didof/moderation
+      imagePullPolicy: Never
