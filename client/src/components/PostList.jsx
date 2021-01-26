@@ -4,7 +4,7 @@ import axios from 'axios'
 import CommentCreate from './CommentCreate'
 import CommentList from './CommentList'
 
-const url = 'http://localhost:4002/posts'
+const url = 'http://posts.com/posts'
 
 function PostList() {
     const [posts, setPosts] = useState({})

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import axios from 'axios'
 
-const url = 'http://localhost:4001/posts/%ID%/comments'
+const url = 'http://posts.com/posts/%ID%/comments'
 
 function CommentCreate({ postId }) {
     const [content, setContent] = useState('')

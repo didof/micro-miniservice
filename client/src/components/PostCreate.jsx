@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import axios from 'axios'
 
-const url = 'http://localhost:4000/posts'
+const url = 'http://posts.com/posts'
 
 function PostCreate() {
     const [title, setTitle] = useState('')
