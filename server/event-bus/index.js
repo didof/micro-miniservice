@@ -9,21 +9,34 @@ app.use(cors())
 
 const events = []
 
-app.post('/events', (req, res) => {
+app.post('/events', async (req, res) => {
   const event = req.body;
 
   events.push(event)
   console.log(events)
 
-  const ports = [4000, 4001, 4002, 4003]
-
-  ports.forEach(async port => {
-    try {
-      await axios.post(`http://localhost:${port}/events`, event)
-    } catch (error) {
-      console.error(`Impossible contact ${port}`)
-    }
-  })
+  try {
+    await axios.post(`http://posts-srv-nodeport:4000/events`, event)
+  } catch (error) {
+    console.error(`Impossible to contact posts-srv-nodeport`)
+    console.error(error)
+  }
+  // try {
+  //   await axios.post(`http://localhost:4001/events`, event)
+  // } catch (error) {
+  //   console.error(`Impossible to contact 4001`)
+  // }
+  // try {
+  //   await axios.post(`http://localhost:4002/events`, event)
+  // } catch (error) {
+  //   console.error(`Impossible to contact 4002`)
+  // }
+  // try {
+  //   await axios.post(`http://localhost:4003/events`, event)
+  // } catch (error) {
+  //   console.error(`Impossible to contact 4003`)
+  // }
+  
 
   res.send({ ok: true });
 });

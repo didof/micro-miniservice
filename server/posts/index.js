@@ -23,13 +23,19 @@ app.post('/posts', async (req, res) => {
     title
   };
 
-  await axios.post('http://localhost:4005/events', {
-    type: 'PostCreated',
-    data: {
-      id,
-      title
-    }
-  }).catch(error => console.error(error));
+  try {
+
+    await axios.post('http://event-bus-srv:4005/events', {
+      type: 'PostCreated',
+      data: {
+        id,
+        title
+      }
+    })
+  } catch (error) {
+    console.error('Error during contact to http://event-bus-srv:4005/events')
+    console.error(error)
+  }
 
   res.status(201).send(posts[id]);
 });
